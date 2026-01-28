@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Blog App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Vue 3 & Vue Router CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://unpkg.com/vue-router@4"></script>
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --accent: #4f46e5;
+    }
+
+    body.dark {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #e5e7eb;
+      --accent: #22d3ee;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--card);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+
+    header h1 {
+      margin: 0;
+      color: var(--accent);
+    }
+
+    nav a {
+      margin-right: 1rem;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    nav a.router-link-active {
+      color: var(--accent);
+    }
+
+    button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+      transition: transform 0.3s;
+      animation: fadeUp 0.6s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script>
+    const Home = {
+      data() {
+        return { posts: [], loading: true }
+      },
+      async mounted() {
+        const res = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=9')
+        this.posts = await res.json()
+        this.loading = false
+      },
+      template: `
+        <div class="container">
+          <h2>Latest Blog Posts</h2>
+          <p v-if="loading">Loading posts...</p>
+          <div class="grid">
+            <div class="card" v-for="post in posts" :key="post.id">
+              <h3>{{ post.title }}</h3>
+              <p>{{ post.body.substring(0, 90) }}...</p>
+              <router-link :to="'/post/' + post.id">Read more →</router-link>
+            </div>
+          </div>
+        </div>
+      `
+    }
+
+    const Post = {
+     data() {
+        return { posts: [], loading: true }
+      },
+      async mounted() {
+        const res = await fetch('https://api.oluwasetemi.dev/posts')
+        this.posts = await res.json()
+        this.loading = false
+      },
+      template: `
+        <div class="container">
+          <h2>Latest Blog Posts</h2>
+          <p v-if="loading">Loading posts...</p>
+          <p>At Inspire Da Streets, we believe community isn’t just something you talk about—it’s something you actively build. That’s why we’re proud to highlight the incredible work being done by Jackmont Hospitality’s TGI Friday’s in partnership with TDH Business Solutions through their impactful initiative known as The Breakfast Club.
+
+This program is a powerful example of what happens when corporate leadership, local businesses, and nonprofits come together with intention.
+
+The Breakfast Club: More Than a Meal
+The Breakfast Club is a community-driven initiative where select nonprofit organizations are invited to gather for breakfast—hosted right inside a TGI Friday’s location. But this isn’t just about food.
+
+These breakfasts have become a safe and welcoming space for nonprofits to:
+
+Show appreciation to staff, volunteers, and partners
+
+Communicate openly and share updates
+
+Network with other community leaders
+
+Host workshops, trainings, and strategy sessions
+
+By opening their doors and creating space, TGI Friday’s and TDH Business Solutions are helping nonprofits strengthen their internal teams and expand their impact—without the added burden of venue costs or logistics.
+
+A Platform That Elevates Local Nonprofits
+For many local nonprofits, access to professional, comfortable gathering spaces can be a challenge. The Breakfast Club removes that barrier.
+
+Instead of scrambling to find affordable meeting locations, organizations can focus on what truly matters: connection, growth, and mission-driven work. The result is stronger collaboration, clearer communication, and renewed energy among those doing some of the most important work in our communities.
+
+This initiative shows that sometimes the most meaningful support isn’t complicated—it’s simply creating room for people to come together.
+
+A Philadelphia Staple with a Community-Driven Heart
+TGI Friday’s has long been a staple restaurant in the Philadelphia area—a place where families celebrate milestones, friends gather, and memories are made. What makes this work even more meaningful is seeing a well-known brand continue to show up for the community not just in words, but through consistent, hands-on service.
+
+Jackmont Hospitality’s commitment goes beyond serving meals. Their actions reflect a deeper belief in being an active participant in the neighborhoods they serve—supporting organizations, uplifting leaders, and investing in local impact.
+
+Leadership That Leads by Example
+None of this would be possible without leadership that truly understands the value of community. We want to extend a heartfelt thank you to General Manager Tim Hampton and the entire Jackmont Hospitality team for their dedication, hospitality, and unwavering support of local nonprofits.
+
+Their willingness to open their space, coordinate efforts, and genuinely welcome community organizations speaks volumes about the culture they’ve built.
+
+Why This Matters
+Initiatives like The Breakfast Club remind us that community service doesn’t always look like a grand gesture. Sometimes, it looks like:
+
+A table set early in the morning
+
+A warm meal shared
+
+Conversations that spark new ideas
+
+Relationships that turn into collaborations
+
+These moments create real change—and they last far beyond breakfast.
+
+Inspire Da Streets Salutes Real Community Action
+At Inspire Da Streets, we celebrate organizations that move with purpose and serve with heart. The Breakfast Club is a shining example of how businesses can leverage their resources to uplift those doing the work on the ground.
+
+Thank you to Jackmont Hospitality, TGI Friday’s, TDH Business Solutions, Tim Hampton, and the entire team for continuing to lead with service, generosity, and intention.
+
+Philadelphia is better because of it.</p>
+          <div class="grid">
+            <div class="card" v-for="post in posts" :key="post.id">
+              <h3>{{ post.title }}</h3>
+              <p>{{ post.body.substring(0, 90) }}...</p>
+              <router-link :to="'/post/' + post.id">Read more →</router-link>
+            </div>
+          </div>
+        </div>
+      `
+    }
+
+    const NotFound = {
+      template: `
+        <div class="container">
+          <h2>404 - Page Not Found</h2>
+          <router-link to="/">Go Home</router-link>
+        </div>
+      `
+    }
+
+    const routes = [
+      { path: '/', component: Home },
+      { path: '/post/:id', component: Post },
+      { path: '/:pathMatch(.*)*', component: NotFound }
+    ]
+
+    const router = VueRouter.createRouter({
+      history: VueRouter.createWebHashHistory(),
+      routes
+    })
+
+    const App = {
+      data() {
+        return { dark: false }
+      },
+      watch: {
+        dark(val) {
+          document.body.classList.toggle('dark', val)
+        }
+      },
+      template: `
+        <header>
+          <h1>Blog App</h1>
+          <nav>
+            <router-link to="/">Home</router-link>
+            <router-link to="/about">About</router-link>
+            <router-link to="/post-detail">PostDetail</router-link>
+            <router-link to="/not-found">NotFound</router-link>
+            <button @click="dark = !dark">🌙 DARK MODE</button>
+          </nav>
+        </header>
+        <router-view></router-view>
+        <footer>© 2026 Blog Application - Emmza · Software Engineer (Former Intern at FNB)</footer>
+      `
+    }
+
+    const app = Vue.createApp(App)
+    app.use(router)
+    app.mount('#app')
+  </script>
+</body>
+</html>
